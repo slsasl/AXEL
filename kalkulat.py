@@ -17,11 +17,17 @@ def myclick(number):
 
 def equal():
     try:
-        y = str(eval(entry.get()))
+        expression = entry.get().replace(',', '.').replace('^', '**')
+        result = eval(expression)
+        formatted_result = f"{result:,.15f}" 
+        if '.' in formatted_result:
+            formatted_result = formatted_result.rstrip('0').rstrip('.')
+        formatted_result = formatted_result.replace('.', ',')
         entry.delete(0, tk.END)
-        entry.insert(0, y)
-    except:
-        tkinter.messagebox.showinfo("Error", "Syntax Error")
+        entry.insert(0, formatted_result)
+    except Exception as e:
+        entry.delete(0, tk.END)
+        entry.insert(0, "Error")
 
 def clear():
     entry.delete(0, tk.END)
@@ -31,14 +37,6 @@ def delete_last():
     entry.delete(0, tk.END)
     entry.insert(0, current_value[:-1])
 
-
-def comma():
-    current = entry.get()
-    if current =="":
-        entry.insert(tk.END, '0,')
-    elif current[-1] != ',':
-        entry.insert(tk.END, ',')
-        
 def percentage():
     current = entry.get()
     try:
@@ -49,17 +47,6 @@ def percentage():
         entry.delete(0, tk.END)
         entry.insert(0, "Error") 
 
-def equal():
-    try:
-        expression = entry.get().replace(',', '').replace('^', '**')
-        result = eval(expression)
-        formatted_result = f"{result:,.2f}" if isinstance(result, float) else f"{result:,}"
-        entry.delete(0, tk.END)
-        entry.insert(0, formatted_result.replace(',', 'X').replace('.', ',').replace('X', '.')) 
-    except Exception as e:
-        entry.delete(0, tk.END)
-        entry.insert(0, "Error")
-        
 button_clear = tk.Button(master=frame, text="C", padx=15, borderwidth=10, pady=5, fg="black", bg="ORANGE", font=('Helvetica', 25), width=3, command=clear)
 button_clear.grid(row=1, column=0, pady=2, sticky="nsew")
 button_delete = tk.Button(master=frame, text="D", padx=15, borderwidth=10, pady=5, fg="black", bg="ORANGE", font=('Helvetica', 25), width=3, command=delete_last)
@@ -76,7 +63,7 @@ button_add = tk.Button(master=frame, text='+', padx=15, borderwidth=10, pady=5, 
 button_add.grid(row=5, column=3, pady=2, sticky="nsew")
 button_equal = tk.Button(master=frame, text="=", padx=15, borderwidth=10, pady=5, fg="black" ,bg="Aquamarine", font=('Helvetica', 25), width=3, command=equal)
 button_equal.grid(row=5, column=2, pady=2, sticky="nsew")
-button_comma = tk.Button(master=frame, text=',', padx=15, borderwidth=10, pady=5, fg="black", bg="#EDFAFD", font=('Helvetica', 25), width=3, command=comma)
+button_comma = tk.Button(master=frame, text=',', padx=15, borderwidth=10, pady=5, fg="black", bg="#EDFAFD", font=('Helvetica', 25), width=3, command=lambda: myclick(','))
 button_comma.grid(row=5, column=1, pady=2, sticky="nsew")
 button_power = tk.Button(master=frame, text='^', padx=15, borderwidth=10, pady=5, fg="black", bg="Aquamarine", font=('Helvetica', 25), width=3, command=lambda: myclick('^'))
 button_power.grid(row=1, column=3, pady=2, sticky="nsew")
